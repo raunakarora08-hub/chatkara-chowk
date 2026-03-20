@@ -31,7 +31,7 @@ const products = [
   {
     id: 4,
     name: 'Wooden Coasters',
-    price: 95,
+    price: 90,
     image: 'https://i.ibb.co/rRHXdM40/Screenshot-2026-03-20-183402.png',
     description: 'Hand-painted wooden coasters featuring traditional Indian art.',
     longDescription: 'Hand-painted wooden coasters featuring traditional Indian art. Perfect for protecting your surfaces while adding a touch of heritage to your home.'
@@ -130,33 +130,33 @@ export default function App() {
       {/* Content Wrapper */}
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="sticky top-0 z-40 bg-delhi-bg/95 backdrop-blur-md border-b-4 border-delhi-gold/80 shadow-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-end relative">
-            
-            {/* Centered Logo */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none py-3">
-              <img 
-                src="https://iili.io/qOGZ6UG.jpg" 
-                alt="Chatkara Chowk Banner" 
-                className="h-full w-auto object-contain pointer-events-auto drop-shadow-md"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className="relative px-5 py-2.5 bg-white/90 backdrop-blur-md border-2 border-delhi-gold/60 rounded-full text-delhi-dark hover:text-delhi-red hover:border-delhi-red transition-all flex items-center gap-2 z-10 shadow-sm"
-            >
-              <span className="font-display tracking-wider text-lg">Cart</span>
-              <ShoppingBag className="w-5 h-5" />
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-delhi-red text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow-md border-2 border-white">
-                  {totalItems}
-                </span>
-              )}
-            </button>
+        <header className="sticky top-0 z-40 bg-delhi-bg/95 backdrop-blur-md border-b-4 border-delhi-gold/80 shadow-md overflow-hidden h-24">
+          {/* Full Header Logo */}
+          <div className="absolute inset-0 pointer-events-none">
+            <img 
+              src="https://iili.io/qOGZ6UG.jpg" 
+              alt="Chatkara Chowk Banner" 
+              className="w-full h-full object-cover object-center pointer-events-auto"
+              referrerPolicy="no-referrer"
+            />
           </div>
         </header>
+
+        {/* Floating Cart Button Below Banner */}
+        <div className="sticky top-[112px] z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-start pointer-events-none -mb-14">
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className="relative px-5 py-2.5 bg-white/40 backdrop-blur-md border-2 border-delhi-gold/60 rounded-full text-delhi-dark hover:text-delhi-red hover:border-delhi-red transition-all flex items-center gap-2 shadow-sm pointer-events-auto"
+          >
+            <span className="font-display tracking-wider text-lg">Cart</span>
+            <ShoppingBag className="w-5 h-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-delhi-red text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow-md border-2 border-white">
+                {totalItems}
+              </span>
+            )}
+          </button>
+        </div>
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -440,9 +440,9 @@ export default function App() {
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 20 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-delhi-bg w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative"
+                className="bg-delhi-bg w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col"
               >
-                <div className="p-6 border-b border-delhi-red/10 bg-white flex items-center justify-between">
+                <div className="p-6 border-b border-delhi-red/10 bg-white flex items-center justify-between shrink-0">
                   <h2 className="font-display text-2xl text-delhi-red">Checkout</h2>
                   <button 
                     type="button"
@@ -457,7 +457,7 @@ export default function App() {
                   action="https://formsubmit.co/raunakarora08@gmail.com" 
                   method="POST"
                   onSubmit={handleCheckoutSubmit}
-                  className="p-6 space-y-5"
+                  className="p-6 space-y-5 overflow-y-auto"
                 >
                   {/* Hidden fields for FormSubmit */}
                   <input type="hidden" name="_subject" value="New Order from Chatkara Chowk!" />
