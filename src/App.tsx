@@ -6,31 +6,35 @@ import { motion, AnimatePresence } from 'motion/react';
 const products = [
   {
     id: 1,
-    name: 'Clay Figurines',
+    name: 'Hand-sculpted resin Clay paperweights',
     price: 80,
     image: 'https://i.ibb.co/cXkm67Xy/Screenshot-2026-03-20-012250.png',
-    description: 'Traditional terracotta horse and elephant figurines, handcrafted by artisans.'
+    description: 'Hand-sculpted from premium clay, these unique figurines combine artistic charm with a substantial weight that keeps your documents perfectly in place.',
+    longDescription: 'Hand-sculpted from premium clay, these unique figurines combine artistic charm with a substantial weight that keeps your documents perfectly in place.\n\nWhether you\'re organizing a busy workspace or looking for a conversation piece, these resin-coated paperweights offer the perfect blend of playful design and utility.'
   },
   {
     id: 2,
     name: 'Personalised Sketches',
     price: 80,
     image: 'https://i.ibb.co/KpCdyHHH/Screenshot-2026-03-20-182406.png',
-    description: 'Custom hand-drawn portraits and sketches. A perfect memory.'
+    description: 'Custom hand-drawn portraits and sketches. A perfect memory.',
+    longDescription: 'Custom hand-drawn portraits and sketches. A perfect memory to cherish forever.'
   },
   {
     id: 3,
-    name: 'Block Printed Handkerchiefs',
+    name: 'Block-Painted Handkerchiefs',
     price: 60,
     image: 'https://i.ibb.co/Kg89p8M/Screenshot-2026-03-20-182218.png',
-    description: 'Authentic hand-block printed cotton handkerchiefs with floral motifs.'
+    description: 'Each handkerchief is a unique piece of wearable art.',
+    longDescription: 'Each handkerchief is a unique piece of wearable art. Using hand-carved wooden blocks and eco-friendly pigments, we press intricate patterns onto premium, breathable cotton. Because they are hand-stamped, no two pieces are identical—giving you a truly one-of-a-kind accessory.\n\nIt’s a sustainable alternative to disposables that brings heritage craftsmanship to your pocket.'
   },
   {
     id: 4,
     name: 'Wooden Coasters',
     price: 95,
     image: 'https://i.ibb.co/rRHXdM40/Screenshot-2026-03-20-183402.png',
-    description: 'Hand-painted wooden coasters featuring traditional Indian art.'
+    description: 'Hand-painted wooden coasters featuring traditional Indian art.',
+    longDescription: 'Hand-painted wooden coasters featuring traditional Indian art. Perfect for protecting your surfaces while adding a touch of heritage to your home.'
   }
 ];
 
@@ -44,18 +48,20 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckout, setIsCheckout] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const [modalQuantity, setModalQuantity] = useState(1);
 
-  const addToCart = (product: typeof products[0]) => {
+  const addToCart = (product: typeof products[0], quantityToAdd: number = 1) => {
     setCart(prev => {
       const existing = prev.find(item => item.product.id === product.id);
       if (existing) {
         return prev.map(item => 
           item.product.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + quantityToAdd }
             : item
         );
       }
-      return [...prev, { product, quantity: 1 }];
+      return [...prev, { product, quantity: quantityToAdd }];
     });
     setIsCartOpen(true);
   };
@@ -89,8 +95,9 @@ export default function App() {
         },
         body: JSON.stringify({
             name: formData.get('name'),
+            role: formData.get('role'),
             phone: formData.get('phone'),
-            address: formData.get('address'),
+            notes: formData.get('notes'),
             _subject: "New Order from Chatkara Chowk!",
             "Order Details": cartDetailsString,
             "Total Amount": `₹${totalAmount}`,
@@ -116,14 +123,14 @@ export default function App() {
       {/* Background Image & Overlay */}
       <div 
         className="fixed inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: 'url("https://iili.io/qOGZ6UG.jpg")' }}
+        style={{ backgroundImage: 'url("https://iili.io/qOV1iw7.jpg")' }}
       />
-      <div className="fixed inset-0 z-0 bg-delhi-bg/90 pointer-events-none" />
+      <div className="fixed inset-0 z-0 bg-delhi-bg/65 pointer-events-none" />
 
       {/* Content Wrapper */}
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="sticky top-0 z-40 bg-delhi-bg/90 backdrop-blur-md border-b border-delhi-red/10">
+        <header className="sticky top-0 z-40 bg-delhi-bg/95 backdrop-blur-md border-b-4 border-delhi-gold/80 shadow-md">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-end relative">
             
             {/* Centered Logo */}
@@ -131,24 +138,25 @@ export default function App() {
               <img 
                 src="https://iili.io/qOGZ6UG.jpg" 
                 alt="Chatkara Chowk Banner" 
-                className="h-full w-auto object-contain pointer-events-auto"
+                className="h-full w-auto object-contain pointer-events-auto drop-shadow-md"
                 referrerPolicy="no-referrer"
               />
             </div>
 
             <button 
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-delhi-dark hover:text-delhi-red transition-colors z-10"
+              className="relative px-5 py-2.5 bg-white/90 backdrop-blur-md border-2 border-delhi-gold/60 rounded-full text-delhi-dark hover:text-delhi-red hover:border-delhi-red transition-all flex items-center gap-2 z-10 shadow-sm"
             >
-            <ShoppingBag className="w-6 h-6" />
-            {totalItems > 0 && (
-              <span className="absolute top-0 right-0 bg-delhi-gold text-delhi-dark text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center transform translate-x-1 -translate-y-1">
-                {totalItems}
-              </span>
-            )}
-          </button>
-        </div>
-      </header>
+              <span className="font-display tracking-wider text-lg">Cart</span>
+              <ShoppingBag className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-delhi-red text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow-md border-2 border-white">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+          </div>
+        </header>
 
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -159,9 +167,13 @@ export default function App() {
           <h2 className="font-display text-5xl md:text-7xl text-delhi-dark mb-6 leading-tight">
             The Essence of <br/><span className="text-delhi-red italic">Purani Delhi</span>
           </h2>
-          <p className="text-lg md:text-xl text-delhi-dark/80 mb-10 font-medium">
+          <p className="text-lg md:text-xl text-delhi-dark/80 mb-8 font-medium">
             Discover handcrafted treasures, personalized art, and traditional keepsakes straight from the heart of the old city.
           </p>
+          <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full border border-delhi-gold/40 shadow-sm text-delhi-dark font-medium">
+            <CheckCircle2 className="w-5 h-5 text-delhi-red" />
+            No payment required now. Pay upon delivery!
+          </div>
         </div>
       </section>
 
@@ -172,25 +184,36 @@ export default function App() {
             <motion.div 
               key={product.id}
               whileHover={{ y: -5 }}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm border border-delhi-red/5 group"
+              onClick={() => {
+                setSelectedProduct(product);
+                setModalQuantity(1);
+              }}
+              className="bg-white rounded-t-[2rem] rounded-b-2xl overflow-hidden shadow-lg border-2 border-delhi-gold/30 group cursor-pointer flex flex-col relative"
             >
-              <div className="aspect-square overflow-hidden relative">
+              {/* Traditional decorative corner */}
+              <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-delhi-gold/60 rounded-tl-[2rem] z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-delhi-gold/60 rounded-tr-[2rem] z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+              
+              <div className="aspect-square overflow-hidden relative border-b-2 border-delhi-gold/20">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-delhi-red shadow-sm">
+                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold text-delhi-red shadow-md border border-delhi-gold/30">
                   ₹{product.price}
                 </div>
               </div>
-              <div className="p-6">
+              <div className="p-6 flex flex-col flex-grow bg-gradient-to-b from-white to-delhi-bg/50">
                 <h3 className="font-display text-xl mb-2 text-delhi-dark">{product.name}</h3>
-                <p className="text-sm text-delhi-dark/70 mb-6 line-clamp-2">{product.description}</p>
+                <p className="text-sm text-delhi-dark/70 mb-6 line-clamp-2 flex-grow">{product.description}</p>
                 <button 
-                  onClick={() => addToCart(product)}
-                  className="w-full py-3 px-4 bg-delhi-red hover:bg-delhi-red/90 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(product, 1);
+                  }}
+                  className="w-full py-3 px-4 bg-delhi-red hover:bg-delhi-red/90 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 mt-auto border border-delhi-red shadow-sm"
                 >
                   <Plus className="w-4 h-4" /> Add to Bag
                 </button>
@@ -205,6 +228,86 @@ export default function App() {
         <div className="font-display text-2xl mb-4 text-delhi-gold">Chatkara Chowk</div>
         <p className="text-sm opacity-70">Bringing Purani Delhi to your doorstep.</p>
       </footer>
+
+      {/* Product Details Modal */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSelectedProduct(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
+            >
+              <div className="w-full md:w-1/2 h-64 md:h-auto relative">
+                <img 
+                  src={selectedProduct.image} 
+                  alt={selectedProduct.name} 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <button 
+                  onClick={() => setSelectedProduct(null)}
+                  className="absolute top-4 left-4 p-2 bg-white/80 backdrop-blur-md rounded-full text-delhi-dark hover:text-delhi-red transition-colors md:hidden"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto">
+                <div className="flex justify-between items-start mb-4 hidden md:flex">
+                  <h2 className="font-display text-3xl text-delhi-dark pr-4">{selectedProduct.name}</h2>
+                  <button 
+                    onClick={() => setSelectedProduct(null)}
+                    className="p-2 text-delhi-dark/50 hover:text-delhi-red transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+                <h2 className="font-display text-3xl text-delhi-dark mb-4 md:hidden">{selectedProduct.name}</h2>
+                <div className="text-2xl font-bold text-delhi-red mb-6">₹{selectedProduct.price}</div>
+                
+                <div className="prose prose-sm text-delhi-dark/80 mb-8 flex-grow whitespace-pre-wrap">
+                  {selectedProduct.longDescription}
+                </div>
+                
+                <div className="flex items-center gap-4 mt-auto">
+                  <div className="flex items-center border-2 border-delhi-gold/40 rounded-xl overflow-hidden bg-delhi-bg/50">
+                    <button 
+                      onClick={() => setModalQuantity(Math.max(1, modalQuantity - 1))}
+                      className="px-4 py-4 text-delhi-dark hover:bg-delhi-gold/20 transition-colors"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="w-12 text-center font-bold text-delhi-dark text-lg">{modalQuantity}</span>
+                    <button 
+                      onClick={() => setModalQuantity(modalQuantity + 1)}
+                      className="px-4 py-4 text-delhi-dark hover:bg-delhi-gold/20 transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      addToCart(selectedProduct, modalQuantity);
+                      setSelectedProduct(null);
+                    }}
+                    className="flex-1 py-4 bg-delhi-red hover:bg-delhi-red/90 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2 shadow-md"
+                  >
+                    <ShoppingBag className="w-5 h-5" /> Add to Bag
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Cart Sidebar */}
       <AnimatePresence>
@@ -300,6 +403,12 @@ export default function App() {
                     <span className="font-display text-2xl text-delhi-red">₹{totalAmount}</span>
                   </div>
                   <button 
+                    onClick={() => setIsCartOpen(false)}
+                    className="w-full py-3 mb-3 bg-white border-2 border-delhi-red text-delhi-red hover:bg-delhi-red/5 rounded-xl font-medium text-lg transition-colors flex items-center justify-center"
+                  >
+                    Continue Shopping
+                  </button>
+                  <button 
                     onClick={() => {
                       setIsCartOpen(false);
                       setIsCheckout(true);
@@ -323,21 +432,24 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={() => setIsCheckout(false)}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             >
               <motion.div 
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                className="bg-delhi-bg w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+                className="bg-delhi-bg w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative"
               >
                 <div className="p-6 border-b border-delhi-red/10 bg-white flex items-center justify-between">
                   <h2 className="font-display text-2xl text-delhi-red">Checkout</h2>
                   <button 
+                    type="button"
                     onClick={() => setIsCheckout(false)}
-                    className="p-2 hover:bg-delhi-red/5 rounded-full transition-colors"
+                    className="p-2 hover:bg-delhi-red/10 bg-delhi-red/5 text-delhi-red rounded-full transition-colors"
                   >
-                    <X className="w-6 h-6 text-delhi-dark" />
+                    <X className="w-6 h-6" />
                   </button>
                 </div>
                 
@@ -363,18 +475,33 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-delhi-dark mb-1.5">Full Name</label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <User className="h-5 w-5 text-delhi-dark/40" />
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-delhi-dark mb-1.5">Full Name</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <User className="h-5 w-5 text-delhi-dark/40" />
+                          </div>
+                          <input 
+                            type="text" 
+                            name="name"
+                            required
+                            className="block w-full pl-10 pr-3 py-3 border border-delhi-red/20 rounded-xl focus:ring-2 focus:ring-delhi-red focus:border-delhi-red bg-white transition-shadow"
+                            placeholder="Rahul Sharma"
+                          />
+                        </div>
                       </div>
-                      <input 
-                        type="text" 
-                        name="name"
-                        required
-                        className="block w-full pl-10 pr-3 py-3 border border-delhi-red/20 rounded-xl focus:ring-2 focus:ring-delhi-red focus:border-delhi-red bg-white transition-shadow"
-                        placeholder="Rahul Sharma"
-                      />
+                      <div className="w-full sm:w-1/3">
+                        <label className="block text-sm font-medium text-delhi-dark mb-1.5">Role</label>
+                        <select 
+                          name="role"
+                          required
+                          className="block w-full px-3 py-3 border border-delhi-red/20 rounded-xl focus:ring-2 focus:ring-delhi-red focus:border-delhi-red bg-white transition-shadow text-delhi-dark"
+                        >
+                          <option value="Student">Student</option>
+                          <option value="Professor">Professor</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
 
@@ -395,17 +522,16 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-delhi-dark mb-1.5">Delivery Address</label>
+                    <label className="block text-sm font-medium text-delhi-dark mb-1.5">Notes for us (Optional)</label>
                     <div className="relative">
                       <div className="absolute top-3 left-3 pointer-events-none">
                         <MapPin className="h-5 w-5 text-delhi-dark/40" />
                       </div>
                       <textarea 
-                        name="address"
-                        required
+                        name="notes"
                         rows={3}
                         className="block w-full pl-10 pr-3 py-3 border border-delhi-red/20 rounded-xl focus:ring-2 focus:ring-delhi-red focus:border-delhi-red bg-white transition-shadow resize-none"
-                        placeholder="House No, Street, Landmark, City, Pincode"
+                        placeholder="Any special requests or instructions..."
                       />
                     </div>
                   </div>
