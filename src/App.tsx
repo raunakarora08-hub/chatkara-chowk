@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ShoppingBag, Plus, Minus, Trash2, X, MapPin, Phone, User, ArrowRight, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShoppingBag, Plus, Minus, Trash2, X, MapPin, Phone, User, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Product Data
@@ -8,7 +8,14 @@ const products = [
     id: 1,
     name: 'Hand-sculpted resin Clay paperweights',
     price: 80,
-    image: 'https://i.ibb.co/cXkm67Xy/Screenshot-2026-03-20-012250.png',
+    image: 'https://iili.io/qODlYiv.jpg',
+    gallery: [
+      'https://iili.io/qODlYiv.jpg',
+      'https://iili.io/qODlllp.jpg',
+      'https://iili.io/qODl5xa.jpg',
+      'https://iili.io/qODl0UN.jpg',
+      'https://iili.io/qODlXxs.jpg'
+    ],
     description: 'Hand-sculpted from premium clay, these unique figurines combine artistic charm with a substantial weight that keeps your documents perfectly in place.',
     longDescription: 'Hand-sculpted from premium clay, these unique figurines combine artistic charm with a substantial weight that keeps your documents perfectly in place.\n\nWhether you\'re organizing a busy workspace or looking for a conversation piece, these resin-coated paperweights offer the perfect blend of playful design and utility.'
   },
@@ -17,6 +24,7 @@ const products = [
     name: 'Personalised Sketches',
     price: 80,
     image: 'https://i.ibb.co/KpCdyHHH/Screenshot-2026-03-20-182406.png',
+    gallery: ['https://i.ibb.co/KpCdyHHH/Screenshot-2026-03-20-182406.png'],
     description: 'Custom hand-drawn portraits and sketches. A perfect memory.',
     longDescription: 'Custom hand-drawn portraits and sketches. A perfect memory to cherish forever.'
   },
@@ -25,6 +33,7 @@ const products = [
     name: 'Block-Painted Handkerchiefs',
     price: 60,
     image: 'https://i.ibb.co/Kg89p8M/Screenshot-2026-03-20-182218.png',
+    gallery: ['https://i.ibb.co/Kg89p8M/Screenshot-2026-03-20-182218.png'],
     description: 'Each handkerchief is a unique piece of wearable art.',
     longDescription: 'Each handkerchief is a unique piece of wearable art. Using hand-carved wooden blocks and eco-friendly pigments, we press intricate patterns onto premium, breathable cotton. Because they are hand-stamped, no two pieces are identical—giving you a truly one-of-a-kind accessory.\n\nIt’s a sustainable alternative to disposables that brings heritage craftsmanship to your pocket.'
   },
@@ -32,7 +41,13 @@ const products = [
     id: 4,
     name: 'Wooden Coasters',
     price: 90,
-    image: 'https://i.ibb.co/rRHXdM40/Screenshot-2026-03-20-183402.png',
+    image: 'https://iili.io/qODfDNt.jpg',
+    gallery: [
+      'https://iili.io/qODfDNt.jpg',
+      'https://iili.io/qODftRI.jpg',
+      'https://iili.io/qODfpxn.jpg',
+      'https://iili.io/qODfbDX.jpg'
+    ],
     description: 'Hand-painted wooden coasters featuring traditional Indian art.',
     longDescription: 'Hand-painted wooden coasters featuring traditional Indian art. Perfect for protecting your surfaces while adding a touch of heritage to your home.'
   }
@@ -41,6 +56,74 @@ const products = [
 type CartItem = {
   product: typeof products[0];
   quantity: number;
+};
+
+const ImageCarousel = ({ images, alt }: { images: string[], alt: string }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  const next = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  if (!images || images.length === 0) return null;
+
+  return (
+    <div className="relative w-full h-full overflow-hidden group">
+      <AnimatePresence initial={false}>
+        <motion.img
+          key={currentIndex}
+          src={images[currentIndex]}
+          alt={alt}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          referrerPolicy="no-referrer"
+        />
+      </AnimatePresence>
+      
+      {images.length > 1 && (
+        <>
+          <button 
+            onClick={prev}
+            className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/60 hover:bg-white/90 backdrop-blur-sm rounded-full text-delhi-dark opacity-0 group-hover:opacity-100 transition-opacity z-20"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={next}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/60 hover:bg-white/90 backdrop-blur-sm rounded-full text-delhi-dark opacity-0 group-hover:opacity-100 transition-opacity z-20"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+          
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+            {images.map((_, idx) => (
+              <div 
+                key={idx} 
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === currentIndex ? 'bg-delhi-red' : 'bg-white/60'}`} 
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default function App() {
@@ -195,13 +278,8 @@ export default function App() {
               <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-delhi-gold/60 rounded-tr-[2rem] z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
               
               <div className="aspect-square overflow-hidden relative border-b-2 border-delhi-gold/20">
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold text-delhi-red shadow-md border border-delhi-gold/30">
+                <ImageCarousel images={product.gallery} alt={product.name} />
+                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold text-delhi-red shadow-md border border-delhi-gold/30 z-30">
                   ₹{product.price}
                 </div>
               </div>
@@ -247,15 +325,10 @@ export default function App() {
               className="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
             >
               <div className="w-full md:w-1/2 h-64 md:h-auto relative">
-                <img 
-                  src={selectedProduct.image} 
-                  alt={selectedProduct.name} 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
+                <ImageCarousel images={selectedProduct.gallery} alt={selectedProduct.name} />
                 <button 
                   onClick={() => setSelectedProduct(null)}
-                  className="absolute top-4 left-4 p-2 bg-white/80 backdrop-blur-md rounded-full text-delhi-dark hover:text-delhi-red transition-colors md:hidden"
+                  className="absolute top-4 left-4 p-2 bg-white/80 backdrop-blur-md rounded-full text-delhi-dark hover:text-delhi-red transition-colors md:hidden z-30"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -354,42 +427,50 @@ export default function App() {
                 ) : (
                   <div className="space-y-6">
                     {cart.map((item) => (
-                      <div key={item.product.id} className="flex gap-4 bg-white p-4 rounded-2xl border border-delhi-red/5 shadow-sm">
-                        <img 
-                          src={item.product.image} 
-                          alt={item.product.name} 
-                          className="w-20 h-20 object-cover rounded-xl"
-                          referrerPolicy="no-referrer"
-                        />
-                        <div className="flex-1 flex flex-col justify-between">
-                          <div>
-                            <h4 className="font-display text-lg text-delhi-dark leading-tight">{item.product.name}</h4>
-                            <p className="text-delhi-red font-bold mt-1">₹{item.product.price}</p>
-                          </div>
-                          <div className="flex items-center justify-between mt-2">
-                            <div className="flex items-center gap-3 bg-delhi-bg rounded-lg p-1 border border-delhi-red/10">
+                      <div key={item.product.id} className="flex flex-col gap-2">
+                        <div className="flex gap-4 bg-white p-4 rounded-2xl border border-delhi-red/5 shadow-sm">
+                          <img 
+                            src={item.product.image} 
+                            alt={item.product.name} 
+                            className="w-20 h-20 object-cover rounded-xl"
+                            referrerPolicy="no-referrer"
+                          />
+                          <div className="flex-1 flex flex-col justify-between">
+                            <div>
+                              <h4 className="font-display text-lg text-delhi-dark leading-tight">{item.product.name}</h4>
+                              <p className="text-delhi-red font-bold mt-1">₹{item.product.price}</p>
+                            </div>
+                            <div className="flex items-center justify-between mt-2">
+                              <div className="flex items-center gap-3 bg-delhi-bg rounded-lg p-1 border border-delhi-red/10">
+                                <button 
+                                  onClick={() => updateQuantity(item.product.id, -1)}
+                                  className="p-1 hover:bg-white rounded-md transition-colors"
+                                >
+                                  <Minus className="w-4 h-4 text-delhi-dark" />
+                                </button>
+                                <span className="font-medium w-4 text-center text-sm">{item.quantity}</span>
+                                <button 
+                                  onClick={() => updateQuantity(item.product.id, 1)}
+                                  className="p-1 hover:bg-white rounded-md transition-colors"
+                                >
+                                  <Plus className="w-4 h-4 text-delhi-dark" />
+                                </button>
+                              </div>
                               <button 
-                                onClick={() => updateQuantity(item.product.id, -1)}
-                                className="p-1 hover:bg-white rounded-md transition-colors"
+                                onClick={() => updateQuantity(item.product.id, -item.quantity)}
+                                className="p-2 text-delhi-dark/40 hover:text-red-500 transition-colors"
                               >
-                                <Minus className="w-4 h-4 text-delhi-dark" />
-                              </button>
-                              <span className="font-medium w-4 text-center text-sm">{item.quantity}</span>
-                              <button 
-                                onClick={() => updateQuantity(item.product.id, 1)}
-                                className="p-1 hover:bg-white rounded-md transition-colors"
-                              >
-                                <Plus className="w-4 h-4 text-delhi-dark" />
+                                <Trash2 className="w-5 h-5" />
                               </button>
                             </div>
-                            <button 
-                              onClick={() => updateQuantity(item.product.id, -item.quantity)}
-                              className="p-2 text-delhi-dark/40 hover:text-red-500 transition-colors"
-                            >
-                              <Trash2 className="w-5 h-5" />
-                            </button>
                           </div>
                         </div>
+                        {item.product.id === 2 && (
+                          <div className="bg-delhi-gold/10 text-delhi-dark text-sm p-3 rounded-xl border border-delhi-gold/30 flex items-start gap-2">
+                            <Info className="w-5 h-5 text-delhi-red shrink-0 mt-0.5" />
+                            <p>We will be texting you soon for the reference image for your personalised sketch!</p>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
