@@ -22,7 +22,7 @@ const products = [
   {
     id: 2,
     name: 'Personalised Sketches',
-    price: 80,
+    price: 150,
     image: 'https://i.ibb.co/KpCdyHHH/Screenshot-2026-03-20-182406.png',
     gallery: ['https://i.ibb.co/KpCdyHHH/Screenshot-2026-03-20-182406.png'],
     description: 'Custom hand-drawn portraits and sketches. A perfect memory.',
@@ -248,7 +248,7 @@ export default function App() {
         </div>
         <div className="text-center max-w-3xl mx-auto relative z-10">
           <h2 className="font-display text-5xl md:text-7xl text-delhi-dark mb-6 leading-tight">
-            The Essence of <br/><span className="text-delhi-red italic">Purani Delhi</span>
+            The Essence of <br/><span className="text-delhi-red italic">Purani Dilli</span>
           </h2>
           <p className="text-lg md:text-xl text-delhi-dark/80 mb-8 font-medium">
             Discover handcrafted treasures, personalized art, and traditional keepsakes straight from the heart of the old city.
@@ -304,7 +304,7 @@ export default function App() {
       {/* Footer */}
       <footer className="bg-delhi-dark text-delhi-bg py-12 text-center border-t border-delhi-red/20">
         <div className="font-display text-2xl mb-4 text-delhi-gold">Chatkara Chowk</div>
-        <p className="text-sm opacity-70">Bringing Purani Delhi to your doorstep.</p>
+        <p className="text-sm opacity-70">Bringing Purani Dilli to your doorstep.</p>
       </footer>
 
       {/* Product Details Modal */}
