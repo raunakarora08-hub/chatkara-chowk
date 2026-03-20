@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Rozha+One&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Rozha One", serif;
+  --color-delhi-red: #8B261D;
+  --color-delhi-gold: #D4AF37;
+  --color-delhi-bg: #FDFBF7;
+  --color-delhi-dark: #2D2D2D;
+}
+
+body {
+  background-color: var(--color-delhi-bg);
+  color: var(--color-delhi-dark);
+}
