@@ -130,23 +130,23 @@ export default function App() {
       {/* Content Wrapper */}
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="sticky top-0 z-40 bg-delhi-bg/95 backdrop-blur-md border-b-4 border-delhi-gold/80 shadow-md overflow-hidden h-24">
+        <header className="relative z-40 bg-delhi-bg border-b-4 border-delhi-gold/80 shadow-md">
           {/* Full Header Logo */}
-          <div className="absolute inset-0 pointer-events-none">
+          <div className="w-full">
             <img 
               src="https://iili.io/qOGZ6UG.jpg" 
               alt="Chatkara Chowk Banner" 
-              className="w-full h-full object-cover object-center pointer-events-auto"
+              className="w-full h-auto block"
               referrerPolicy="no-referrer"
             />
           </div>
         </header>
 
         {/* Floating Cart Button Below Banner */}
-        <div className="sticky top-[112px] z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-start pointer-events-none -mb-14">
+        <div className="sticky top-4 z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-start pointer-events-none h-0 pt-4">
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="relative px-5 py-2.5 bg-white/40 backdrop-blur-md border-2 border-delhi-gold/60 rounded-full text-delhi-dark hover:text-delhi-red hover:border-delhi-red transition-all flex items-center gap-2 shadow-sm pointer-events-auto"
+            className="relative px-5 py-2.5 bg-white/60 backdrop-blur-md border-2 border-delhi-gold/60 rounded-full text-delhi-dark hover:text-delhi-red hover:border-delhi-red transition-all flex items-center gap-2 shadow-sm pointer-events-auto"
           >
             <span className="font-display tracking-wider text-lg">Cart</span>
             <ShoppingBag className="w-5 h-5" />
