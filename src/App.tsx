@@ -7,7 +7,7 @@ const products = [
   {
     id: 1,
     name: 'Hand-sculpted resin Clay paperweights',
-    price: 80,
+    price: 100,
     image: 'https://iili.io/qODlYiv.jpg',
     gallery: [
       'https://iili.io/qODlYiv.jpg',
@@ -40,7 +40,7 @@ const products = [
   {
     id: 4,
     name: 'Wooden Coasters',
-    price: 100,
+    price: 200,
     image: 'https://iili.io/qODfDNt.jpg',
     gallery: [
       'https://iili.io/qODfDNt.jpg',
