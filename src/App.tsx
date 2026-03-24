@@ -40,7 +40,7 @@ const products = [
   {
     id: 4,
     name: 'Wooden Coasters',
-    price: 90,
+    price: 100,
     image: 'https://iili.io/qODfDNt.jpg',
     gallery: [
       'https://iili.io/qODfDNt.jpg',
@@ -48,8 +48,8 @@ const products = [
       'https://iili.io/qODfpxn.jpg',
       'https://iili.io/qODfbDX.jpg'
     ],
-    description: 'Hand-painted wooden coasters featuring traditional Indian art.',
-    longDescription: 'Hand-painted wooden coasters featuring traditional Indian art. Perfect for protecting your surfaces while adding a touch of heritage to your home.'
+    description: 'Hand-painted wooden coasters featuring traditional Indian art. (Only for Professors)',
+    longDescription: 'Hand-painted wooden coasters featuring traditional Indian art. Perfect for protecting your surfaces while adding a touch of heritage to your home. Note: These are exclusively available for professors.'
   }
 ];
 
@@ -133,6 +133,7 @@ export default function App() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
   const [modalQuantity, setModalQuantity] = useState(1);
+  const [role, setRole] = useState('Student');
 
   const addToCart = (product: typeof products[0], quantityToAdd: number = 1) => {
     setCart(prev => {
@@ -160,6 +161,8 @@ export default function App() {
   };
 
   const totalAmount = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+  const discount = role === 'Professor' ? totalAmount * 0.2 : 0;
+  const finalAmount = totalAmount - discount;
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const cartDetailsString = cart.map(item => `${item.quantity}x ${item.product.name} (₹${item.product.price * item.quantity})`).join('\n');
@@ -183,7 +186,7 @@ export default function App() {
             notes: formData.get('notes'),
             _subject: "New Order from Chatkara Chowk!",
             "Order Details": cartDetailsString,
-            "Total Amount": `₹${totalAmount}`,
+            "Total Amount": `₹${finalAmount} ${discount > 0 ? '(Includes 20% Professor Discount)' : ''}`,
             "Payment Method": "Cash on Delivery / Pay Later"
         })
       });
@@ -212,6 +215,12 @@ export default function App() {
 
       {/* Content Wrapper */}
       <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Professor Banner */}
+        <div className="bg-delhi-red text-white text-center py-2 px-4 text-sm sm:text-base font-medium flex items-center justify-center gap-2 shadow-sm z-50">
+          <Info className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span>🎓 20% Professor Discount! Free delivery directly to your cabins.</span>
+        </div>
+        
         {/* Header */}
         <header className="relative z-40 bg-delhi-bg border-b-4 border-delhi-gold/80 shadow-md">
           {/* Full Header Logo */}
@@ -279,8 +288,15 @@ export default function App() {
               
               <div className="aspect-square overflow-hidden relative border-b-2 border-delhi-gold/20">
                 <ImageCarousel images={product.gallery} alt={product.name} />
-                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold text-delhi-red shadow-md border border-delhi-gold/30 z-30">
-                  ₹{product.price}
+                <div className="absolute top-4 left-4 flex items-center gap-2 z-30">
+                  {product.id === 4 && (
+                    <span className="bg-delhi-red/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-white shadow-md border border-delhi-gold/30">
+                      Only for Professors
+                    </span>
+                  )}
+                  <span className="bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold text-delhi-red shadow-md border border-delhi-gold/30">
+                    ₹{product.price}
+                  </span>
                 </div>
               </div>
               <div className="p-6 flex flex-col flex-grow bg-gradient-to-b from-white to-delhi-bg/50">
@@ -344,7 +360,14 @@ export default function App() {
                   </button>
                 </div>
                 <h2 className="font-display text-3xl text-delhi-dark mb-4 md:hidden">{selectedProduct.name}</h2>
-                <div className="text-2xl font-bold text-delhi-red mb-6">₹{selectedProduct.price}</div>
+                <div className="flex items-center gap-3 mb-6">
+                  {selectedProduct.id === 4 && (
+                    <span className="bg-delhi-red text-white px-3 py-1 rounded-full text-sm font-bold shadow-sm">
+                      Only for Professors
+                    </span>
+                  )}
+                  <div className="text-2xl font-bold text-delhi-red">₹{selectedProduct.price}</div>
+                </div>
                 
                 <div className="prose prose-sm text-delhi-dark/80 mb-8 flex-grow whitespace-pre-wrap">
                   {selectedProduct.longDescription}
@@ -480,7 +503,7 @@ export default function App() {
               {cart.length > 0 && (
                 <div className="p-6 bg-white border-t border-delhi-red/10">
                   <div className="flex items-center justify-between mb-6">
-                    <span className="text-lg font-medium text-delhi-dark">Total Amount</span>
+                    <span className="text-lg font-medium text-delhi-dark">Subtotal</span>
                     <span className="font-display text-2xl text-delhi-red">₹{totalAmount}</span>
                   </div>
                   <button 
@@ -545,7 +568,7 @@ export default function App() {
                   <input type="hidden" name="_captcha" value="false" />
                   <input type="hidden" name="_template" value="table" />
                   <input type="hidden" name="Order Details" value={cartDetailsString} />
-                  <input type="hidden" name="Total Amount" value={`₹${totalAmount}`} />
+                  <input type="hidden" name="Total Amount" value={`₹${finalAmount} ${discount > 0 ? '(Includes 20% Professor Discount)' : ''}`} />
                   <input type="hidden" name="Payment Method" value="Cash on Delivery / Pay Later" />
                   
                   <div className="bg-delhi-gold/10 p-4 rounded-xl border border-delhi-gold/20 mb-6">
@@ -577,6 +600,8 @@ export default function App() {
                         <select 
                           name="role"
                           required
+                          value={role}
+                          onChange={(e) => setRole(e.target.value)}
                           className="block w-full px-3 py-3 border border-delhi-red/20 rounded-xl focus:ring-2 focus:ring-delhi-red focus:border-delhi-red bg-white transition-shadow text-delhi-dark"
                         >
                           <option value="Student">Student</option>
@@ -617,9 +642,17 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-delhi-red/10 flex items-center justify-between mb-6">
-                    <span className="text-lg font-medium text-delhi-dark">Total to Pay Later</span>
-                    <span className="font-display text-2xl text-delhi-red">₹{totalAmount}</span>
+                  <div className="pt-4 border-t border-delhi-red/10 flex flex-col gap-2 mb-6">
+                    {discount > 0 && (
+                      <div className="flex items-center justify-between text-delhi-red font-medium">
+                        <span>Professor Discount (20%)</span>
+                        <span>-₹{discount.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-medium text-delhi-dark">Total to Pay Later</span>
+                      <span className="font-display text-2xl text-delhi-red">₹{finalAmount.toFixed(2)}</span>
+                    </div>
                   </div>
 
                   <button 
