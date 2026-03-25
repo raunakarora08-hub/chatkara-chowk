@@ -40,7 +40,7 @@ const products = [
   {
     id: 4,
     name: 'Wooden Coasters',
-    price: 150,
+    price: 100,
     image: 'https://iili.io/qODfDNt.jpg',
     gallery: [
       'https://iili.io/qODfDNt.jpg',
@@ -48,8 +48,8 @@ const products = [
       'https://iili.io/qODfpxn.jpg',
       'https://iili.io/qODfbDX.jpg'
     ],
-    description: 'Hand-painted wooden coasters featuring traditional Indian art. (Only for Professors)',
-    longDescription: 'Hand-painted wooden coasters featuring traditional Indian art. Perfect for protecting your surfaces while adding a touch of heritage to your home. Note: These are exclusively available for professors.'
+    description: 'Wooden coasters featuring traditional Indian art. (Only for Professors)',
+    longDescription: 'Wooden coasters featuring traditional Indian art. Perfect for protecting your surfaces while adding a touch of heritage to your home. Note: These are exclusively available for professors.'
   }
 ];
 
