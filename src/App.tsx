@@ -40,7 +40,7 @@ const products = [
   {
     id: 4,
     name: 'Wooden Coasters',
-    price: 200,
+    price: 150,
     image: 'https://iili.io/qODfDNt.jpg',
     gallery: [
       'https://iili.io/qODfDNt.jpg',
@@ -161,7 +161,7 @@ export default function App() {
   };
 
   const totalAmount = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-  const discount = role === 'Professor' ? totalAmount * 0.2 : 0;
+  const discount = 0;
   const finalAmount = totalAmount - discount;
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -218,7 +218,7 @@ export default function App() {
         {/* Professor Banner */}
         <div className="bg-delhi-red text-white text-center py-2 px-4 text-sm sm:text-base font-medium flex items-center justify-center gap-2 shadow-sm z-50">
           <Info className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>🎓 20% Professor Discount! Free delivery directly to your cabins.</span>
+          <span>🎓 20% Professor Discount on food and drinks! Free delivery directly to your cabins.</span>
         </div>
         
         {/* Header */}
